@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "708152323626",
+    "project_id": "mindquota-7a0da",
+    "storage_bucket": "mindquota-7a0da.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:708152323626:android:5466aaf63cba193b9fdd53",
+        "android_client_info": {
+          "package_name": "com.example.my_quiz_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDJYl0XNw00kwS6wEbJnAFxMcbxjfxyLbY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
