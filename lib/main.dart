@@ -1,31 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart'; 
+import 'pages/landing_page.dart';
+import 'pages/submitted_questions.dart'; // Import SubmittedQuestionsPage
 
-void main() {
-  runApp(MaterialApp(
-    debugShowCheckedModeBanner: false,
-    home: TestImagePage(),
-  ));
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(); // Initialize Firebase
+  runApp(MyApp());
 }
 
-class TestImagePage extends StatelessWidget {
+class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text("Image Test")),
-      body: Center(
-        child: Image.network(
-          'https://i.postimg.cc/63VC9q4s/economics.jpg',
-          errorBuilder: (context, error, stackTrace) {
-            return Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(Icons.error, color: Colors.red),
-                Text("Image failed to load"),
-              ],
-            );
-          },
-        ),
-      ),
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'Quiz App',
+      theme: ThemeData(primarySwatch: Colors.blue),
+      initialRoute: '/',
+      routes: {
+        '/': (context) => LandingPage(), // Start with LandingPage or auth check
+        '/submitted_questions': (context) => SubmittedQuestionsPage(), // Register the route
+      },
     );
   }
 }

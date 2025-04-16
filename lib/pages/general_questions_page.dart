@@ -7,6 +7,35 @@ class GeneralQuestionsPage extends StatefulWidget {
   _GeneralQuestionsPageState createState() => _GeneralQuestionsPageState();
 }
 
+String convertToRawGitHubUrl(String url) {
+  if (url.contains('github.com') && url.contains('/blob/')) {
+    return url
+        .replaceFirst('https://github.com/', 'https://raw.githubusercontent.com/')
+        .replaceFirst('/blob/', '/');
+  }
+  return url;
+}
+
+Future<List<Map<String, dynamic>>> getTenRandomQuestions() async {
+  try {
+    final snapshot = await FirebaseFirestore.instance.collection('general_questions').get();
+    final allDocs = snapshot.docs;
+
+    if (allDocs.length <= 10) {
+      // If you have 10 or fewer questions, return them all
+      return allDocs.map((doc) => doc.data()).toList();
+    }
+
+    // Shuffle and take 10
+    allDocs.shuffle(Random());
+    final selectedDocs = allDocs.take(10).toList();
+    return selectedDocs.map((doc) => doc.data()).toList();
+  } catch (e) {
+    print('❌ Error fetching questions: $e');
+    return [];
+  }
+}
+
 class _GeneralQuestionsPageState extends State<GeneralQuestionsPage> {
   int currentQuestionIndex = 0;
   int score = 0;
@@ -21,6 +50,11 @@ class _GeneralQuestionsPageState extends State<GeneralQuestionsPage> {
     super.initState();
     fetchQuestions();
   }
+
+Future<void> loadQuestions() async {
+  questions = await getTenRandomQuestions();
+  setState(() {});
+}
 
 Future<void> fetchQuestions() async {
   try {
@@ -122,15 +156,27 @@ Future<void> fetchQuestions() async {
                 topLeft: Radius.circular(5),
                 topRight: Radius.circular(5),
               ),
-              child: question["image"] != null && question["image"].toString().trim().isNotEmpty
-                ? Image.network(
-                    'https://picsum.photos/250?image=9',
-                    errorBuilder: (context, error, stackTrace) => Text("Failed"),
-                  )
-                  : Image.asset(
-                      'assets/quiz.jpg',
-                      fit: BoxFit.cover,
-                    ),
+              child: SizedBox(
+                height: 350,
+                width: double.infinity,
+                child: question["imageUrl"] != null && question["imageUrl"].toString().trim().isNotEmpty
+                    ? Image.network(
+                        convertToRawGitHubUrl(question["imageUrl"]),
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) => Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(Icons.broken_image, color: Colors.red),
+                            SizedBox(height: 8),
+                            Text("Image failed to load"),
+                          ],
+                        ),
+                      )
+                    : Image.asset(
+                        'assets/quiz.jpg',
+                        fit: BoxFit.cover,
+                      ),
+              ),
             ),
             SizedBox(height: 20),
             CustomPaint(size: Size(double.infinity, 5), painter: YellowLinePainter()),

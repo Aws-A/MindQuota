@@ -48,5 +48,30 @@ final List<Map<String, dynamic>> generalQuestions = [
     "question": "How long does light take to reach Earth?",
     "options": ["Immediately", "About 2 Minutes", "About 8 Minutes", "One hour"],
     "answer": "About 8 Minutes"
+  },
+   {
+    "question": "Which year did the second world war begin?",
+    "options": ["1938", "1939", "1940", "1941"],
+    "answer": "1939"
+  },
+   {
+    "question": "What's the deepest lake in the world?",
+    "options": ["Baikal", "Victoria", "Tanganyika", "Ontario"],
+    "answer": "About 8 Minutes"
+  },
+   {
+    "question": "If you devide 1 on Zero, you will get?",
+    "options": ["Infinity", "0", "1", "Undefined"],
+    "answer": "Undefined"
+  },
+   {
+    "question": "How many letters in Greek langauge?",
+    "options": ["24", "26", "28", "30"],
+    "answer": "24"
+  },
+   {
+    "question": "Who did invent typewriter?",
+    "options": ["henry pascal", "Thomas edison", "Pellegrino Turri", "Johannes Gutenberg"],
+    "answer": "Pellegrino Turri"
   }
 ];
