@@ -15,19 +15,19 @@ class TopicsScreen extends StatelessWidget {
       "title": "General",
       "icon": Icons.lightbulb,
       "color": Color.fromARGB(255, 43, 65, 98),
-      "diagonalColor": Colors.white,
+      "diagonalColor": Color.fromARGB(255, 239, 239, 239),
     },
     {
       "title": "Language & Communication",
       "icon": Icons.language,
       "color": Color.fromRGBO(43, 65, 98, 1),
-      "diagonalColor": Color(0xFFEEEEEE),
+      "diagonalColor": Color.fromARGB(255, 221, 221, 221),
     },
     {
       "title": "History",
       "icon": Icons.history,
       "color": Color.fromRGBO(43, 65, 98, 1),
-      "diagonalColor": Color(0xFFD2D2D2),
+      "diagonalColor": Color.fromARGB(255, 193, 193, 193),
     },
     {
       "title": "Geography",

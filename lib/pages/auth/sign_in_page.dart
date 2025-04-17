@@ -85,46 +85,67 @@ class _SignInPageState extends State<SignInPage> {
               TextFormField(
                 controller: _emailController,
                 keyboardType: TextInputType.emailAddress,
+                style: TextStyle(color: Color(0xFF2B4162)), // Default text color
                 decoration: InputDecoration(
                   labelText: "Email",
-                  border: OutlineInputBorder(),
+                  labelStyle: TextStyle(color: Color(0xFF2B4162)), // Label color
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Color(0xFF2B4162)),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Color(0xFF118AB2), width: 2),
+                  ),
                 ),
                 validator: (value) =>
                     value == null || value.isEmpty ? "Enter an email" : null,
               ),
-              SizedBox(height: 16),
+
+              SizedBox(height: 17),
+
               TextFormField(
                 controller: _passwordController,
                 obscureText: true,
+                style: TextStyle(color: Color(0xFF2B4162)),
                 decoration: InputDecoration(
                   labelText: "Password",
-                  border: OutlineInputBorder(),
+                  labelStyle: TextStyle(color: Color(0xFF2B4162)),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Color(0xFF2B4162)),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Color(0xFF118AB2), width: 2),
+                  ),
                 ),
                 validator: (value) =>
                     value == null || value.isEmpty ? "Enter a password" : null,
               ),
-              SizedBox(height: 20),
-              _isLoading
-                  ? CircularProgressIndicator()
-                  : ElevatedButton(
-                      onPressed: _signIn,
-                      style: ElevatedButton.styleFrom(
-                      backgroundColor: Color(0xFF118AB2), // Match landing page color
-                      padding: EdgeInsets.symmetric(horizontal: 50, vertical: 15),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5), // Match landing page shape
+             SizedBox(height: 25),
+              SizedBox(
+                width: 260,
+                height: 60,
+                child: _isLoading
+                    ? Center(child: CircularProgressIndicator())
+                    : ElevatedButton(
+                        onPressed: _signIn,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Color(0xFF118AB2),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(5),
+                          ),
+                        ),
+                        child: Text(
+                          "Sign In",
+                          style: TextStyle(fontSize: 25, color: Colors.white),
+                        ),
                       ),
-                    ),
-                      child: Text("Sign In",
-                      style: TextStyle(fontSize: 25, color: Colors.white),
-                      ),
-                    ),
+              ),
               SizedBox(height: 10),
               TextButton(
                 onPressed: () {
                   // TODO: Navigate to SignUpPage
                 },
-                child: Text("Don't have an account? Sign Up"),
+                child: Text("Don't have an account? Sign Up",
+                            style: TextStyle(fontSize: 17, color: Color(0xFF2B4162)),),
               ),
             ],
           ),

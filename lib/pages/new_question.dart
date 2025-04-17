@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'submitted_questions.dart'; // Import the review page
+import 'submitted_questions.dart';
 
 class NewQuestionPage extends StatefulWidget {
   @override
@@ -30,6 +30,19 @@ class _NewQuestionPageState extends State<NewQuestionPage> {
     'Arts',
     'Sports & Recreation',
   ];
+
+  InputDecoration _underlineDecoration(String label) {
+    return InputDecoration(
+      labelText: label,
+      labelStyle: TextStyle(color: Color(0xFF2B4162)),
+      enabledBorder: UnderlineInputBorder(
+        borderSide: BorderSide(color: Color(0xFF2B4162)),
+      ),
+      focusedBorder: UnderlineInputBorder(
+        borderSide: BorderSide(color: Color(0xFF118AB2), width: 2),
+      ),
+    );
+  }
 
   void _submitQuestion() async {
     if (questionController.text.isEmpty ||
@@ -117,17 +130,21 @@ class _NewQuestionPageState extends State<NewQuestionPage> {
             children: [
               TextField(
                 controller: questionController,
-                decoration: InputDecoration(labelText: "Enter your question"),
+                style: TextStyle(color: Color(0xFF2B4162)),
+                decoration: _underlineDecoration("Enter your question"),
               ),
               SizedBox(height: 10),
               TextField(
                 controller: imageUrlController,
-                decoration: InputDecoration(labelText: "Image URL (optional)"),
+                style: TextStyle(color: Color(0xFF2B4162)),
+                decoration: _underlineDecoration("Image URL (optional)"),
               ),
               SizedBox(height: 16),
               DropdownButtonFormField<String>(
-                decoration: InputDecoration(labelText: "Select a Topic"),
+                decoration: _underlineDecoration("Select a Topic"),
                 value: selectedTopic,
+                dropdownColor: Colors.white,
+                style: TextStyle(color: Color(0xFF2B4162)),
                 items: topics.map((topic) {
                   return DropdownMenuItem<String>(
                     value: topic,
@@ -141,7 +158,10 @@ class _NewQuestionPageState extends State<NewQuestionPage> {
                 },
               ),
               SizedBox(height: 20),
-              Text("Enter answer choices and select the correct one:"),
+              Text(
+                "Enter answer choices and select the correct one:",
+                style: TextStyle(color: Color(0xFF2B4162)),
+              ),
               for (int i = 0; i < 4; i++)
                 Row(
                   children: [
@@ -153,12 +173,14 @@ class _NewQuestionPageState extends State<NewQuestionPage> {
                           option3Controller,
                           option4Controller
                         ][i],
-                        decoration: InputDecoration(labelText: "Option ${i + 1}"),
+                        style: TextStyle(color: Color(0xFF2B4162)),
+                        decoration: _underlineDecoration("Option ${i + 1}"),
                       ),
                     ),
                     Radio<int>(
                       value: i,
                       groupValue: selectedAnswerIndex,
+                      activeColor: Color(0xFF118AB2),
                       onChanged: (int? value) {
                         setState(() {
                           selectedAnswerIndex = value;
@@ -167,11 +189,24 @@ class _NewQuestionPageState extends State<NewQuestionPage> {
                     ),
                   ],
                 ),
-              SizedBox(height: 20),
+              SizedBox(height: 25),
               Center(
-                child: ElevatedButton(
-                  onPressed: _submitQuestion,
-                  child: Text("Submit Question"),
+                child: SizedBox(
+                  width: 260,
+                  height: 60,
+                  child: ElevatedButton(
+                    onPressed: _submitQuestion,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Color(0xFF118AB2),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                    ),
+                    child: Text(
+                      "Submit Question",
+                      style: TextStyle(fontSize: 25, color: Colors.white),
+                    ),
+                  ),
                 ),
               ),
             ],

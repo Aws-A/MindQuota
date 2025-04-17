@@ -93,54 +93,82 @@ class _SubmittedQuestionsPageState extends State<SubmittedQuestionsPage> {
             itemBuilder: (context, index) {
               var question = questions[index];
               var questionData = question.data() as Map<String, dynamic>;
+              final options = List<String>.from(questionData['options'] ?? []);
+              final correctAnswer = questionData['answer']?.toString();
 
               return Card(
                 margin: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                 elevation: 3,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                child: ListTile(
-                  contentPadding: EdgeInsets.all(12),
-                  title: Text(
-                    questionData['question'],
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                  ),
-                  subtitle: Padding(
-                    padding: EdgeInsets.only(top: 6),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: (questionData['options'] as List<dynamic>).map((option) {
-                        return Padding(
-                          padding: EdgeInsets.symmetric(vertical: 2),
-                          child: Text("• $option"),
-                        );
-                      }).toList(),
-                    ),
-                  ),
-                  trailing: Row(
-                    mainAxisSize: MainAxisSize.min,
+                child: Padding(
+                  padding: EdgeInsets.all(12),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      IconButton(
-                        icon: Icon(Icons.check_circle, color: Colors.green, size: 30),
-                        onPressed: () => _confirmQuestion(question.id, questionData),
+                      if (questionData['imageUrl'] != null && questionData['imageUrl'].toString().isNotEmpty)
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(8),
+                          child: Image.network(
+                            questionData['imageUrl'],
+                            height: 160,
+                            width: double.infinity,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      SizedBox(height: 10),
+                      Text(
+                        questionData['question'] ?? '',
+                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                       ),
-                      IconButton(
-                        icon: Icon(Icons.edit, color: Colors.blue, size: 30),
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => EditQuestionPage(
-                                docId: question.id,
-                                questionData: questionData,
+                      SizedBox(height: 6),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: options.map((option) {
+                          final isCorrect = option == correctAnswer;
+                          return Padding(
+                            padding: EdgeInsets.symmetric(vertical: 2),
+                            child: Text(
+                              '• $option',
+                              style: TextStyle(
+                                color: isCorrect ? Colors.green : Colors.black,
+                                fontWeight: isCorrect ? FontWeight.bold : FontWeight.normal,
                               ),
                             ),
                           );
-                        },
+                        }).toList(),
                       ),
-                      IconButton(
-                        icon: Icon(Icons.delete, color: Colors.red, size: 30),
-                        onPressed: () => _deleteQuestion(question.id),
+                      SizedBox(height: 6),
+                      Text(
+                        "Topic: ${questionData['topic'] ?? 'Unknown'}",
+                        style: TextStyle(color: Colors.blueGrey),
                       ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          IconButton(
+                            icon: Icon(Icons.check_circle, color: Color(0xFF118AB2), size: 30),
+                            onPressed: () => _confirmQuestion(question.id, questionData),
+                          ),
+                          IconButton(
+                            icon: Icon(Icons.edit, color: Color(0xFFFFD116), size: 30),
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => EditQuestionPage(
+                                    docId: question.id,
+                                    questionData: questionData,
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                          IconButton(
+                            icon: Icon(Icons.delete, color: Color(0xFFFA8334), size: 30),
+                            onPressed: () => _deleteQuestion(question.id),
+                          ),
+                        ],
+                      )
                     ],
                   ),
                 ),

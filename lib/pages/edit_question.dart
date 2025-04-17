@@ -35,6 +35,9 @@ class _EditQuestionPageState extends State<EditQuestionPage> {
     'Sports & Recreation',
   ];
 
+  final Color baseColor = Color(0xFF2B4162);
+  final Color activeColor = Color(0xFF118AB2);
+
   @override
   void initState() {
     super.initState();
@@ -50,6 +53,19 @@ class _EditQuestionPageState extends State<EditQuestionPage> {
 
     selectedTopic = widget.questionData['topic'];
     selectedAnswerIndex = options.indexOf(widget.questionData['answer']);
+  }
+
+  InputDecoration _underlineInputDecoration(String label) {
+    return InputDecoration(
+      labelText: label,
+      labelStyle: TextStyle(color: baseColor),
+      focusedBorder: UnderlineInputBorder(
+        borderSide: BorderSide(color: activeColor, width: 2),
+      ),
+      enabledBorder: UnderlineInputBorder(
+        borderSide: BorderSide(color: baseColor),
+      ),
+    );
   }
 
   void _updateQuestion() async {
@@ -89,7 +105,7 @@ class _EditQuestionPageState extends State<EditQuestionPage> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Question updated successfully!")),
       );
-      Navigator.pop(context); // Go back after successful update
+      Navigator.pop(context);
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Error updating question: $e")),
@@ -111,9 +127,17 @@ class _EditQuestionPageState extends State<EditQuestionPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Edit Question"),
+   backgroundColor: Colors.white,  // Set the background color of the whole page
+   appBar: AppBar(
+      title: Text(
+        "Edit Question",
+        style: TextStyle(
+          color: Colors.black,
+        ),
       ),
+      backgroundColor: Colors.white,
+      iconTheme: IconThemeData(color: Colors.black),
+    ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: SingleChildScrollView(
@@ -122,17 +146,21 @@ class _EditQuestionPageState extends State<EditQuestionPage> {
             children: [
               TextField(
                 controller: questionController,
-                decoration: InputDecoration(labelText: "Enter your question"),
+                style: TextStyle(color: baseColor),
+                decoration: _underlineInputDecoration("Enter your question"),
               ),
               SizedBox(height: 10),
               TextField(
                 controller: imageUrlController,
-                decoration: InputDecoration(labelText: "Image URL (optional)"),
+                style: TextStyle(color: baseColor),
+                decoration: _underlineInputDecoration("Image URL (optional)"),
               ),
               SizedBox(height: 16),
               DropdownButtonFormField<String>(
-                decoration: InputDecoration(labelText: "Select a Topic"),
+                decoration: _underlineInputDecoration("Select a Topic"),
                 value: selectedTopic,
+                dropdownColor: Colors.white,
+                style: TextStyle(color: baseColor),
                 items: topics.map((topic) {
                   return DropdownMenuItem<String>(
                     value: topic,
@@ -146,7 +174,10 @@ class _EditQuestionPageState extends State<EditQuestionPage> {
                 },
               ),
               SizedBox(height: 20),
-              Text("Edit answer choices and select the correct one:"),
+              Text(
+                "Edit answer choices and select the correct one:",
+                style: TextStyle(color: baseColor),
+              ),
               for (int i = 0; i < 4; i++)
                 Row(
                   children: [
@@ -158,12 +189,14 @@ class _EditQuestionPageState extends State<EditQuestionPage> {
                           option3Controller,
                           option4Controller
                         ][i],
-                        decoration: InputDecoration(labelText: "Option ${i + 1}"),
+                        style: TextStyle(color: baseColor),
+                        decoration: _underlineInputDecoration("Option ${i + 1}"),
                       ),
                     ),
                     Radio<int>(
                       value: i,
                       groupValue: selectedAnswerIndex,
+                      activeColor: activeColor,
                       onChanged: (int? value) {
                         setState(() {
                           selectedAnswerIndex = value;
@@ -172,11 +205,24 @@ class _EditQuestionPageState extends State<EditQuestionPage> {
                     ),
                   ],
                 ),
-              SizedBox(height: 20),
+              SizedBox(height: 25),
               Center(
-                child: ElevatedButton(
-                  onPressed: _updateQuestion,
-                  child: Text("Update Question"),
+                child: SizedBox(
+                  width: 260,
+                  height: 60,
+                  child: ElevatedButton(
+                    onPressed: _updateQuestion,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: activeColor,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                    ),
+                    child: Text(
+                      "Update Question",
+                      style: TextStyle(fontSize: 25, color: Colors.white),
+                    ),
+                  ),
                 ),
               ),
             ],
