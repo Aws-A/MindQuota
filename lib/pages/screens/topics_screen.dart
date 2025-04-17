@@ -1,12 +1,20 @@
 import 'package:flutter/material.dart';
 import '../general_questions_page.dart';
+import '../language&communication_questions_page.dart';
+import '../history_questions_page.dart';
+import '../geography_questions_page.dart';
+import '../social-sciences_questions_page.dart';
+import '../science&technology_questions_page.dart';
+import '../business&economics_questions_page.dart';
+import '../arts_questions_page.dart';
+import '../sports&recreation_questions_page.dart';
 
 class TopicsScreen extends StatelessWidget {
   final List<Map<String, dynamic>> topics = [
     {
       "title": "General",
-      "icon": Icons.lightbulb, // Example icon
-      "color": Color.fromARGB(255, 43, 65, 98), // Dark blue background
+      "icon": Icons.lightbulb,
+      "color": Color.fromARGB(255, 43, 65, 98),
       "diagonalColor": Colors.white,
     },
     {
@@ -71,24 +79,21 @@ class TopicsScreen extends StatelessWidget {
 
           return Container(
             margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            height: 44, // Fixed height
+            height: 44,
             child: Stack(
               children: [
-                // Main dark blue container
                 Container(
                   decoration: BoxDecoration(
                     color: topic['color'],
-                    borderRadius: BorderRadius.circular(5), // Rounded edges
+                    borderRadius: BorderRadius.circular(5),
                   ),
                 ),
-
-                // White diagonal section
                 ClipPath(
                   clipper: DiagonalClipper(),
                   child: Container(
-                    width: 80, // Adjust width of the white section
+                    width: 80,
                     decoration: BoxDecoration(
-                      color: topic['diagonalColor'], // Use the new color
+                      color: topic['diagonalColor'],
                       borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(5),
                         bottomLeft: Radius.circular(5),
@@ -96,11 +101,8 @@ class TopicsScreen extends StatelessWidget {
                     ),
                   ),
                 ),
-
-                // Row to align icon & text
                 Row(
                   children: [
-                    // White circular icon background
                     Container(
                       width: 50,
                       height: 50,
@@ -111,26 +113,44 @@ class TopicsScreen extends StatelessWidget {
                       ),
                       child: Icon(
                         topic['icon'],
-                        color: Color(0xFF3E3E3E), // Replaces black with #3E3E3E
+                        color: Color(0xFF3E3E3E),
                         size: 28,
                       ),
                     ),
-                    SizedBox(width: 16), // Spacing
-                    // Topic Title
+                    SizedBox(width: 16),
                     Padding(
-                      padding: EdgeInsets.only(left: 8), // Adjust the value as needed
+                      padding: EdgeInsets.only(left: 8),
                       child: GestureDetector(
                         onTap: () {
-                          // Navigate to the corresponding questions page
-                          if (topic['title'] == "General") {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => GeneralQuestionsPage(),
-                              ),
-                            );
+                          switch (topic['title']) {
+                            case "General":
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => GeneralQuestionsPage()));
+                              break;
+                            case "Language & Communication":
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => LanguageCommunicationQuestionsPage()));
+                              break;
+                            case "History":
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => HistoryQuestionsPage()));
+                              break;
+                            case "Geography":
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => GeographyQuestionsPage()));
+                              break;
+                            case "Social Sciences":
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => SocialSciencesQuestionsPage()));
+                              break;
+                            case "Science & Technology":
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => ScienceTechnologyQuestionsPage()));
+                              break;
+                            case "Business & Economics":
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => BusinessEconomicsQuestionsPage()));
+                              break;
+                            case "Arts":
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => ArtsQuestionsPage()));
+                              break;
+                            case "Sports & Recreation":
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => SportsRecreationQuestionsPage()));
+                              break;
                           }
-                          // You can add similar navigation for other topics here
                         },
                         child: Text(
                           topic['title'],
@@ -153,14 +173,13 @@ class TopicsScreen extends StatelessWidget {
   }
 }
 
-// Clipper for the opposite 45-degree cut
 class DiagonalClipper extends CustomClipper<Path> {
   @override
   Path getClip(Size size) {
     Path path = Path();
-    path.lineTo(size.width, 0); // Move to top-right
-    path.lineTo(size.width - 20, size.height); // Diagonal cut in the opposite direction
-    path.lineTo(0, size.height); // Bottom left corner
+    path.lineTo(size.width, 0);
+    path.lineTo(size.width - 20, size.height);
+    path.lineTo(0, size.height);
     path.close();
     return path;
   }

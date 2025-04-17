@@ -9,14 +9,27 @@ class NewQuestionPage extends StatefulWidget {
 
 class _NewQuestionPageState extends State<NewQuestionPage> {
   final TextEditingController questionController = TextEditingController();
-  final TextEditingController imageUrlController = TextEditingController(); // ✅ NEW
+  final TextEditingController imageUrlController = TextEditingController();
   final TextEditingController option1Controller = TextEditingController();
   final TextEditingController option2Controller = TextEditingController();
   final TextEditingController option3Controller = TextEditingController();
   final TextEditingController option4Controller = TextEditingController();
 
   int? selectedAnswerIndex;
+  String? selectedTopic;
+
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  final List<String> topics = [
+    'Language & Communication',
+    'History',
+    'Geography',
+    'Social Sciences',
+    'Science & Technology',
+    'Business & Economics',
+    'Arts',
+    'Sports & Recreation',
+  ];
 
   void _submitQuestion() async {
     if (questionController.text.isEmpty ||
@@ -24,16 +37,18 @@ class _NewQuestionPageState extends State<NewQuestionPage> {
         option2Controller.text.isEmpty ||
         option3Controller.text.isEmpty ||
         option4Controller.text.isEmpty ||
-        selectedAnswerIndex == null) {
+        selectedAnswerIndex == null ||
+        selectedTopic == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Please fill all fields and select an answer")),
+        SnackBar(content: Text("Please fill all fields and select an answer and topic")),
       );
       return;
     }
 
     Map<String, dynamic> newQuestion = {
       "question": questionController.text,
-      "imageUrl": imageUrlController.text, // ✅ NEW FIELD
+      "imageUrl": imageUrlController.text,
+      "topic": selectedTopic,
       "options": [
         option1Controller.text,
         option2Controller.text,
@@ -63,13 +78,14 @@ class _NewQuestionPageState extends State<NewQuestionPage> {
 
   void _clearFields() {
     questionController.clear();
-    imageUrlController.clear(); // ✅ NEW
+    imageUrlController.clear();
     option1Controller.clear();
     option2Controller.clear();
     option3Controller.clear();
     option4Controller.clear();
     setState(() {
       selectedAnswerIndex = null;
+      selectedTopic = null;
     });
   }
 
@@ -95,7 +111,7 @@ class _NewQuestionPageState extends State<NewQuestionPage> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: SingleChildScrollView( // ✅ NEW to prevent overflow
+        child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -105,10 +121,26 @@ class _NewQuestionPageState extends State<NewQuestionPage> {
               ),
               SizedBox(height: 10),
               TextField(
-                controller: imageUrlController, // ✅ NEW
+                controller: imageUrlController,
                 decoration: InputDecoration(labelText: "Image URL (optional)"),
               ),
               SizedBox(height: 16),
+              DropdownButtonFormField<String>(
+                decoration: InputDecoration(labelText: "Select a Topic"),
+                value: selectedTopic,
+                items: topics.map((topic) {
+                  return DropdownMenuItem<String>(
+                    value: topic,
+                    child: Text(topic),
+                  );
+                }).toList(),
+                onChanged: (value) {
+                  setState(() {
+                    selectedTopic = value;
+                  });
+                },
+              ),
+              SizedBox(height: 20),
               Text("Enter answer choices and select the correct one:"),
               for (int i = 0; i < 4; i++)
                 Row(

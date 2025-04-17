@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'edit_question.dart'; // Make sure this import matches your file structure
 
 class SubmittedQuestionsPage extends StatefulWidget {
   @override
@@ -12,19 +13,59 @@ class _SubmittedQuestionsPageState extends State<SubmittedQuestionsPage> {
   Future<void> _confirmQuestion(String docId, Map<String, dynamic> questionData) async {
     try {
       await _firestore.collection('general_questions').add(questionData);
+
+      String topic = (questionData['topic'] ?? '').toString();
+      String collectionName = _getTopicCollectionName(topic);
+
+      if (collectionName.isNotEmpty) {
+        await _firestore.collection(collectionName).add(questionData);
+      }
+
       await _firestore.collection('custom_questions').doc(docId).delete();
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Question confirmed!")));
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Question confirmed and routed by topic!")),
+      );
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Error: ${e.toString()}")));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Error: ${e.toString()}")),
+      );
+    }
+  }
+
+  String _getTopicCollectionName(String topic) {
+    switch (topic.trim()) {
+      case 'Arts':
+        return 'arts_questions';
+      case 'Business & Economics':
+        return 'business&economics_questions';
+      case 'Geography':
+        return 'geography_questions';
+      case 'History':
+        return 'history_questions';
+      case 'Language & Communication':
+        return 'language&communication_questions';
+      case 'Science & Technology':
+        return 'science&technology_questions';
+      case 'Social Sciences':
+        return 'social-sciences_questions';
+      case 'Sports & Recreation':
+        return 'sports&recreation_questions';
+      default:
+        return '';
     }
   }
 
   Future<void> _deleteQuestion(String docId) async {
     try {
       await _firestore.collection('custom_questions').doc(docId).delete();
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Question deleted!")));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Question deleted!")),
+      );
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Error: ${e.toString()}")));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Error: ${e.toString()}")),
+      );
     }
   }
 
@@ -81,6 +122,20 @@ class _SubmittedQuestionsPageState extends State<SubmittedQuestionsPage> {
                       IconButton(
                         icon: Icon(Icons.check_circle, color: Colors.green, size: 30),
                         onPressed: () => _confirmQuestion(question.id, questionData),
+                      ),
+                      IconButton(
+                        icon: Icon(Icons.edit, color: Colors.blue, size: 30),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => EditQuestionPage(
+                                docId: question.id,
+                                questionData: questionData,
+                              ),
+                            ),
+                          );
+                        },
                       ),
                       IconButton(
                         icon: Icon(Icons.delete, color: Colors.red, size: 30),

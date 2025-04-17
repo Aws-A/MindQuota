@@ -8,30 +8,42 @@ class GeneralQuestionsPage extends StatefulWidget {
 }
 
 String convertToRawGitHubUrl(String url) {
+  // Case 1: Full GitHub permalink
   if (url.contains('github.com') && url.contains('/blob/')) {
     return url
         .replaceFirst('https://github.com/', 'https://raw.githubusercontent.com/')
         .replaceFirst('/blob/', '/');
   }
+
+  // Case 2: Firebase value like 'assets/typewriter.jpg'
+  if (url.startsWith('assets/')) {
+    return 'https://raw.githubusercontent.com/Aws-A/MindQuota/main/$url';
+  }
+
+  // Otherwise, return original
   return url;
 }
 
 Future<List<Map<String, dynamic>>> getTenRandomQuestions() async {
   try {
-    final snapshot = await FirebaseFirestore.instance.collection('general_questions').get();
-    final allDocs = snapshot.docs;
+    final snapshot = await FirebaseFirestore.instance
+        .collection('general_questions')
+        .get();
 
-    if (allDocs.length <= 10) {
-      // If you have 10 or fewer questions, return them all
-      return allDocs.map((doc) => doc.data()).toList();
-    }
+    print("🔥 Total fetched questions: ${snapshot.docs.length}");
 
-    // Shuffle and take 10
-    allDocs.shuffle(Random());
-    final selectedDocs = allDocs.take(10).toList();
-    return selectedDocs.map((doc) => doc.data()).toList();
+    final allQuestions = snapshot.docs.map((doc) {
+      final data = doc.data();
+      return {
+        ...data,
+        "id": doc.id,
+      };
+    }).toList();
+
+    allQuestions.shuffle();
+    return allQuestions.take(10).toList();
   } catch (e) {
-    print('❌ Error fetching questions: $e');
+    print("❌ Error getting random questions: $e");
     return [];
   }
 }
@@ -45,44 +57,20 @@ class _GeneralQuestionsPageState extends State<GeneralQuestionsPage> {
 
   List<Map<String, dynamic>> questions = [];
 
-  @override
-  void initState() {
-    super.initState();
-    fetchQuestions();
-  }
-
-Future<void> loadQuestions() async {
-  questions = await getTenRandomQuestions();
-  setState(() {});
+@override
+void initState() {
+  super.initState();
+  loadQuestions(); // ✅ Use this instead
 }
 
-Future<void> fetchQuestions() async {
-  try {
-    final snapshot = await FirebaseFirestore.instance
-        .collection('general_questions')
-        //.orderBy('order') // <- Only use this if you’re sure it exists
-        .get();
+Future<void> loadQuestions() async {
+  print("🔍 Loading questions...");
+  setState(() => isLoading = true); // Start loading
 
-    if (snapshot.docs.isNotEmpty) {
-      questions = snapshot.docs.map((doc) {
-        final data = doc.data();
-        // Add optional fallback structure check here
-        return {
-          ...data,
-          "id": doc.id,
-        };
-      }).toList();
-    }
+  questions = await getTenRandomQuestions();
 
-    setState(() {
-      isLoading = false;
-    });
-  } catch (e) {
-    print("Error fetching questions: $e");
-    setState(() {
-      isLoading = false;
-    });
-  }
+  print("✅ ✅ ✅ ✅ ✅ Finished loading. Total loaded: ${questions.length}");
+  setState(() => isLoading = false); // Done loading
 }
 
 
@@ -152,24 +140,21 @@ Future<void> fetchQuestions() async {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             ClipRRect(
-              borderRadius: BorderRadius.only(
+              borderRadius: const BorderRadius.only(
                 topLeft: Radius.circular(5),
                 topRight: Radius.circular(5),
               ),
               child: SizedBox(
                 height: 350,
                 width: double.infinity,
-                child: question["imageUrl"] != null && question["imageUrl"].toString().trim().isNotEmpty
+                child: question["imageUrl"] != null &&
+                        question["imageUrl"].toString().trim().isNotEmpty
                     ? Image.network(
                         convertToRawGitHubUrl(question["imageUrl"]),
                         fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) => Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(Icons.broken_image, color: Colors.red),
-                            SizedBox(height: 8),
-                            Text("Image failed to load"),
-                          ],
+                        errorBuilder: (context, error, stackTrace) => Image.asset(
+                          'assets/quiz.jpg',
+                          fit: BoxFit.cover,
                         ),
                       )
                     : Image.asset(

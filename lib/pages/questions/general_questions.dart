@@ -5,7 +5,7 @@ final List<Map<String, dynamic>> generalQuestions = [
     "answer": "7164"
   },
   {
-    "question": "Which year was Rome founded?",
+    "question": "Which year did Rome fall?",
     "options": ["44 B.C", "166 A.D", "407 A.D", "476 A.D"],
     "answer": "44 B.C"
   },
@@ -57,7 +57,7 @@ final List<Map<String, dynamic>> generalQuestions = [
    {
     "question": "What's the deepest lake in the world?",
     "options": ["Baikal", "Victoria", "Tanganyika", "Ontario"],
-    "answer": "About 8 Minutes"
+    "answer": "Baikal"
   },
    {
     "question": "If you devide 1 on Zero, you will get?",
@@ -71,7 +71,7 @@ final List<Map<String, dynamic>> generalQuestions = [
   },
    {
     "question": "Who did invent typewriter?",
-    "options": ["henry pascal", "Thomas edison", "Pellegrino Turri", "Johannes Gutenberg"],
+    "options": ["Henry Pascal", "Thomas Edison", "Pellegrino Turri", "Johannes Gutenberg"],
     "answer": "Pellegrino Turri"
   }
 ];
