@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'screens/topics_screen.dart'; 
 import 'dart:math';
 
 class HistoryQuestionsPage extends StatefulWidget {
@@ -80,17 +81,54 @@ class _HistoryQuestionsPageState extends State<HistoryQuestionsPage> {
         context: context,
         barrierDismissible: false,
         builder: (context) => AlertDialog(
-          title: Text("Quiz Completed!"),
-          content: Text("Your score: $score / ${questions.length}"),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-                restartQuiz();
-              },
-              child: Text("Restart Quiz"),
-            )
-          ],
+          backgroundColor: Color(0xFF118AB2).withValues(alpha: 0.8),
+          title: Text("Quiz Completed!",
+            style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+              color: Color(0xFFFFD116),
+            ),
+        ),
+        content: Text("Your score: $score / ${questions.length}",                      
+              style: TextStyle(
+              fontSize: 17,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
+          ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context); // Close the dialog
+              restartQuiz();           // Reset quiz on the same page
+            },
+            child: Text(
+              "Restart Quiz",
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
+            ),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context); // Close dialog
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => TopicsScreen()),
+              );
+            },
+            child: Text(
+              "Exit",
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
+              ),
+            ),
+          ),
+        ],
         ),
       );
     }

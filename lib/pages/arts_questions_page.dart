@@ -99,20 +99,17 @@ class _ArtsQuestionsPageState extends State<ArtsQuestionsPage> {
         actions: [
           TextButton(
             onPressed: () {
-              restartQuiz(); // Reset quiz
-              Navigator.pop(context); // Close dialog
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => TopicsScreen()),
-              );
+              Navigator.pop(context); // Close the dialog
+              restartQuiz();           // Reset quiz on the same page
             },
-            child: Text("Restart Quiz",
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
-                    ),
+            child: Text(
+              "Restart Quiz",
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
+            ),
           ),
           TextButton(
             onPressed: () {
@@ -122,13 +119,14 @@ class _ArtsQuestionsPageState extends State<ArtsQuestionsPage> {
                 MaterialPageRoute(builder: (context) => TopicsScreen()),
               );
             },
-            child: Text("Exit",
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
-                      ),
-                    ),
+            child: Text(
+              "Exit",
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
+              ),
+            ),
           ),
         ],
       ),
