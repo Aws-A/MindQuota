@@ -15,6 +15,7 @@ class _SignInPageState extends State<SignInPage> {
   final TextEditingController _passwordController = TextEditingController();
 
   bool _isLoading = false;
+  bool _obscurePassword = true;
 
   Future<void> _signIn() async {
     if (!_formKey.currentState!.validate()) return;
@@ -85,10 +86,11 @@ class _SignInPageState extends State<SignInPage> {
               TextFormField(
                 controller: _emailController,
                 keyboardType: TextInputType.emailAddress,
-                style: TextStyle(color: Color(0xFF2B4162)), // Default text color
+                style: TextStyle(color: Color(0xFF2B4162)),
                 decoration: InputDecoration(
                   labelText: "Email",
-                  labelStyle: TextStyle(color: Color(0xFF2B4162)), // Label color
+                  labelStyle: TextStyle(color: Color(0xFF2B4162)),
+                  suffixIcon: Icon(Icons.email, color: Color(0xFF118AB2)),
                   enabledBorder: OutlineInputBorder(
                     borderSide: BorderSide(color: Color(0xFF2B4162)),
                   ),
@@ -99,16 +101,25 @@ class _SignInPageState extends State<SignInPage> {
                 validator: (value) =>
                     value == null || value.isEmpty ? "Enter an email" : null,
               ),
-
               SizedBox(height: 17),
-
               TextFormField(
                 controller: _passwordController,
-                obscureText: true,
+                obscureText: _obscurePassword,
                 style: TextStyle(color: Color(0xFF2B4162)),
                 decoration: InputDecoration(
                   labelText: "Password",
                   labelStyle: TextStyle(color: Color(0xFF2B4162)),
+                  suffixIcon: IconButton(
+                    icon: Icon(
+                      _obscurePassword ? Icons.visibility : Icons.visibility_off,
+                      color: Color(0xFF118AB2),
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        _obscurePassword = !_obscurePassword;
+                      });
+                    },
+                  ),
                   enabledBorder: OutlineInputBorder(
                     borderSide: BorderSide(color: Color(0xFF2B4162)),
                   ),
@@ -119,7 +130,7 @@ class _SignInPageState extends State<SignInPage> {
                 validator: (value) =>
                     value == null || value.isEmpty ? "Enter a password" : null,
               ),
-             SizedBox(height: 25),
+              SizedBox(height: 25),
               SizedBox(
                 width: 260,
                 height: 60,
@@ -144,8 +155,10 @@ class _SignInPageState extends State<SignInPage> {
                 onPressed: () {
                   // TODO: Navigate to SignUpPage
                 },
-                child: Text("Don't have an account? Sign Up",
-                            style: TextStyle(fontSize: 17, color: Color(0xFF2B4162)),),
+                child: Text(
+                  "Don't have an account? Sign Up",
+                  style: TextStyle(fontSize: 17, color: Color(0xFF2B4162)),
+                ),
               ),
             ],
           ),
