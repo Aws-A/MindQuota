@@ -96,40 +96,38 @@ class _SocialSciencesQuestionsPageState extends State<SocialSciencesQuestionsPag
                       ),
         ),
         actions: [
-          TextButton(
-            onPressed: () {
-              restartQuiz(); // Reset quiz
-              Navigator.pop(context); // Close dialog
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => TopicsScreen()),
-              );
-            },
-            child: Text("Restart Quiz",
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
-                    ),
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context); // Close dialog
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => TopicsScreen()),
-              );
-            },
-            child: Text("Exit",
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
-                      ),
-                    ),
-          ),
-        ],
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context); // Close dialog
+                restartQuiz();           // Reset and reload questions
+              },
+              child: Text(
+                "Restart Quiz",
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context); // Close dialog
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => TopicsScreen()),
+                );
+              },
+              child: Text(
+                "Exit",
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                ),
+              ),
+            ),
+          ],
       ),
     );
   }
@@ -142,6 +140,7 @@ void restartQuiz() {
     selectedAnswer = null;
     isAnswered = false;
   });
+  loadQuestions();
 }
 
   @override
