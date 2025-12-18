@@ -95,39 +95,39 @@ class _SocialSciencesQuestionsPageState extends State<SocialSciencesQuestionsPag
                         color: Colors.white,
                       ),
         ),
-        actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context); // Close dialog
-                restartQuiz();           // Reset and reload questions
-              },
-              child: Text(
-                "Restart Quiz",
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
+       actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context); // Close the dialog
+              restartQuiz();           // Reset quiz on the same page
+            },
+            child: Text(
+              "Restart Quiz",
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
               ),
             ),
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context); // Close dialog
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (context) => TopicsScreen()),
-                );
-              },
-              child: Text(
-                "Exit",
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
-                ),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context); // Close dialog
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => TopicsScreen()),
+              );
+            },
+            child: Text(
+              "Exit",
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
               ),
             ),
-          ],
+          ),
+        ],
       ),
     );
   }
