@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'screens/topics_screen.dart'; 
 import 'submitted_questions.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class NewQuestionPage extends StatefulWidget {
   @override
@@ -8,6 +10,10 @@ class NewQuestionPage extends StatefulWidget {
 }
 
 class _NewQuestionPageState extends State<NewQuestionPage> {
+
+  // 🔐 Current logged-in user
+  final User? currentUser = FirebaseAuth.instance.currentUser;
+
   final TextEditingController questionController = TextEditingController();
   final TextEditingController imageUrlController = TextEditingController();
   final TextEditingController option1Controller = TextEditingController();
@@ -106,111 +112,159 @@ class _NewQuestionPageState extends State<NewQuestionPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text("New Question"),
+        title: Text("New Question"),
+        actions: [
+          if (currentUser?.email == 'awsius@gmail.com')
             IconButton(
               icon: Icon(Icons.assignment, size: 32),
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => SubmittedQuestionsPage()),
+                  MaterialPageRoute(
+                    builder: (context) => SubmittedQuestionsPage(),
+                  ),
                 );
               },
             ),
-          ],
-        ),
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              TextField(
-                controller: questionController,
-                style: TextStyle(color: Color(0xFF2B4162)),
-                decoration: _underlineDecoration("Enter your question"),
-              ),
-              SizedBox(height: 10),
-              TextField(
-                controller: imageUrlController,
-                style: TextStyle(color: Color(0xFF2B4162)),
-                decoration: _underlineDecoration("Image URL (optional)"),
-              ),
-              SizedBox(height: 16),
-              DropdownButtonFormField<String>(
-                decoration: _underlineDecoration("Select a Topic"),
-                value: selectedTopic,
-                dropdownColor: Colors.white,
-                style: TextStyle(color: Color(0xFF2B4162)),
-                items: topics.map((topic) {
-                  return DropdownMenuItem<String>(
-                    value: topic,
-                    child: Text(topic),
-                  );
-                }).toList(),
-                onChanged: (value) {
-                  setState(() {
-                    selectedTopic = value;
-                  });
-                },
-              ),
-              SizedBox(height: 20),
-              Text(
-                "Enter answer choices and select the correct one:",
-                style: TextStyle(color: Color(0xFF2B4162)),
-              ),
-              for (int i = 0; i < 4; i++)
-                Row(
-                  children: [
-                    Expanded(
-                      child: TextField(
-                        controller: [
-                          option1Controller,
-                          option2Controller,
-                          option3Controller,
-                          option4Controller
-                        ][i],
-                        style: TextStyle(color: Color(0xFF2B4162)),
-                        decoration: _underlineDecoration("Option ${i + 1}"),
-                      ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            TextField(
+              controller: questionController,
+              style: TextStyle(color: Color(0xFF2B4162)),
+              decoration: _underlineDecoration("Enter your question"),
+            ),
+            SizedBox(height: 10),
+
+            TextField(
+              controller: imageUrlController,
+              style: TextStyle(color: Color(0xFF2B4162)),
+              decoration: _underlineDecoration("Image URL (optional)"),
+            ),
+            SizedBox(height: 16),
+
+            DropdownButtonFormField<String>(
+              decoration: _underlineDecoration("Select a Topic"),
+              value: selectedTopic,
+              dropdownColor: Colors.white,
+              style: TextStyle(color: Color(0xFF2B4162)),
+              items: topics.map((topic) {
+                return DropdownMenuItem<String>(
+                  value: topic,
+                  child: Text(topic),
+                );
+              }).toList(),
+              onChanged: (value) {
+                setState(() {
+                  selectedTopic = value;
+                });
+              },
+            ),
+            SizedBox(height: 20),
+
+            Text(
+              "Enter answer choices and select the correct one:",
+              style: TextStyle(color: Color(0xFF2B4162)),
+            ),
+
+            for (int i = 0; i < 4; i++)
+              Row(
+                children: [
+                  Expanded(
+                    child: TextField(
+                      controller: [
+                        option1Controller,
+                        option2Controller,
+                        option3Controller,
+                        option4Controller
+                      ][i],
+                      style: TextStyle(color: Color(0xFF2B4162)),
+                      decoration: _underlineDecoration("Option ${i + 1}"),
                     ),
-                    Radio<int>(
-                      value: i,
-                      groupValue: selectedAnswerIndex,
-                      activeColor: Color(0xFF118AB2),
-                      onChanged: (int? value) {
-                        setState(() {
-                          selectedAnswerIndex = value;
-                        });
-                      },
+                  ),
+                  Radio<int>(
+                    value: i,
+                    groupValue: selectedAnswerIndex,
+                    activeColor: Color(0xFF118AB2),
+                    onChanged: (int? value) {
+                      setState(() {
+                        selectedAnswerIndex = value;
+                      });
+                    },
+                  ),
+                ],
+              ),
+
+            SizedBox(height: 30),
+
+            // 🔵 Submit Button
+            Center(
+              child: SizedBox(
+                width: 260,
+                height: 60,
+                child: ElevatedButton(
+                  onPressed: _submitQuestion,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Color(0xFF118AB2),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5),
                     ),
-                  ],
+                  ),
+                  child: Text(
+                    "Submit Question",
+                    style: TextStyle(fontSize: 25, color: Colors.white),
+                  ),
                 ),
-              SizedBox(height: 25),
-              Center(
-                child: SizedBox(
-                  width: 260,
-                  height: 60,
-                  child: ElevatedButton(
-                    onPressed: _submitQuestion,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Color(0xFF118AB2),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5),
-                      ),
+              ),
+            ),
+
+            // ➖ Divider
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 18),
+              child: Divider(
+                thickness: 1.5,
+                color: Colors.grey.shade400,
+                indent: 40,
+                endIndent: 40,
+              ),
+            ),
+
+            // 🟡 Home Button
+            Center(
+              child: SizedBox(
+                width: 260,
+                height: 60,
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (context) => TopicsScreen()),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Color(0xFFFFD116),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5),
                     ),
-                    child: Text(
-                      "Submit Question",
-                      style: TextStyle(fontSize: 25, color: Colors.white),
+                  ),
+                  child: Text(
+                    "Home Page",
+                    style: TextStyle(
+                      fontSize: 25,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
                     ),
                   ),
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
+        ),
         ),
       ),
     );

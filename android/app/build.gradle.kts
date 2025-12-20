@@ -7,10 +7,20 @@ plugins {
 }
 
 android {
-    namespace = "com.example.my_quiz_app"
+    namespace = "com.innovi.mindquota"
     compileSdk = flutter.compileSdkVersion
     // Set NDK version to 27.0.12077973
-    ndkVersion = "27.0.12077973" 
+    ndkVersion = "27.0.12077973"
+
+    signingConfigs {
+    create("release") {
+        storeFile = file("/Users/awsal/mindquota-release.keystore")
+        storePassword = "Mqqq12*5"
+        keyAlias = "mindquota"
+        keyPassword = "Mqqq12*5"
+        }
+    }
+
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
@@ -34,11 +44,16 @@ android {
 
     buildTypes {
         release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig = signingConfigs.getByName("debug")
+            signingConfig = signingConfigs.getByName("release")
+            isMinifyEnabled = true
+            isShrinkResources = true
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
         }
     }
+
 }
 
 flutter {

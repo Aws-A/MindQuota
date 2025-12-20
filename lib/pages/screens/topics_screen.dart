@@ -70,101 +70,94 @@ class TopicsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+      backgroundColor: Colors.white,
       appBar: AppBar(title: Text("Topics")),
       body: ListView.builder(
         itemCount: topics.length,
         itemBuilder: (context, index) {
           final topic = topics[index];
 
-          return Container(
-            margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            height: 44,
-            child: Stack(
-              children: [
-                Container(
-                  decoration: BoxDecoration(
-                    color: topic['color'],
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                ),
-                ClipPath(
-                  clipper: DiagonalClipper(),
-                  child: Container(
-                    width: 80,
+          return GestureDetector(
+            onTap: () {
+              switch (topic['title']) {
+                case "General":
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => GeneralQuestionsPage()));
+                  break;
+                case "Language & Communication":
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => LanguageCommunicationQuestionsPage()));
+                  break;
+                case "History":
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => HistoryQuestionsPage()));
+                  break;
+                case "Geography":
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => GeographyQuestionsPage()));
+                  break;
+                case "Social Sciences":
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => SocialSciencesQuestionsPage()));
+                  break;
+                case "Science & Technology":
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => ScienceTechnologyQuestionsPage()));
+                  break;
+                case "Business & Economics":
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => BusinessEconomicsQuestionsPage()));
+                  break;
+                case "Arts":
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => ArtsQuestionsPage()));
+                  break;
+                case "Sports & Recreation":
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => SportsRecreationQuestionsPage()));
+                  break;
+              }
+            },
+            child: Container(
+              margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              height: 44, // a bit taller for easier tapping
+              child: Stack(
+                children: [
+                  Container(
                     decoration: BoxDecoration(
-                      color: topic['diagonalColor'],
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(5),
-                        bottomLeft: Radius.circular(5),
-                      ),
+                      color: topic['color'],
+                      borderRadius: BorderRadius.circular(5),
                     ),
                   ),
-                ),
-                Row(
-                  children: [
-                    Container(
-                      width: 50,
-                      height: 50,
-                      margin: EdgeInsets.only(left: 10),
+                  ClipPath(
+                    clipper: DiagonalClipper(),
+                    child: Container(
+                      width: 80,
                       decoration: BoxDecoration(
-                        color: Colors.transparent,
-                        shape: BoxShape.circle,
-                      ),
-                      child: Icon(
-                        topic['icon'],
-                        color: Color(0xFF3E3E3E),
-                        size: 28,
-                      ),
-                    ),
-                    SizedBox(width: 16),
-                    Padding(
-                      padding: EdgeInsets.only(left: 8),
-                      child: GestureDetector(
-                        onTap: () {
-                          switch (topic['title']) {
-                            case "General":
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => GeneralQuestionsPage()));
-                              break;
-                            case "Language & Communication":
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => LanguageCommunicationQuestionsPage()));
-                              break;
-                            case "History":
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => HistoryQuestionsPage()));
-                              break;
-                            case "Geography":
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => GeographyQuestionsPage()));
-                              break;
-                            case "Social Sciences":
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => SocialSciencesQuestionsPage()));
-                              break;
-                            case "Science & Technology":
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => ScienceTechnologyQuestionsPage()));
-                              break;
-                            case "Business & Economics":
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => BusinessEconomicsQuestionsPage()));
-                              break;
-                            case "Arts":
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => ArtsQuestionsPage()));
-                              break;
-                            case "Sports & Recreation":
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => SportsRecreationQuestionsPage()));
-                              break;
-                          }
-                        },
-                        child: Text(
-                          topic['title'],
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
+                        color: topic['diagonalColor'],
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(5),
+                          bottomLeft: Radius.circular(5),
                         ),
                       ),
                     ),
-                  ],
-                ),
-              ],
+                  ),
+                  Row(
+                    children: [
+                      Container(
+                        width: 50,
+                        height: 50,
+                        margin: EdgeInsets.only(left: 12),
+                        child: Icon(
+                          topic['icon'],
+                          color: Color(0xFF3E3E3E),
+                          size: 28,
+                        ),
+                      ),
+                      SizedBox(width: 16),
+                      Text(
+                        topic['title'],
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           );
         },

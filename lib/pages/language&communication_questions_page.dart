@@ -163,109 +163,107 @@ void restartQuiz() {
 
     return Scaffold(
       appBar: AppBar(title: Text("Language & Communication Questions")),
-      body: Padding(
-        padding: EdgeInsets.all(16),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(5),
-              child: SizedBox(
-                height: 350,
-                width: double.infinity,
-                child: question["imageUrl"] != null &&
-                        question["imageUrl"].toString().trim().isNotEmpty
-                    ? Image.network(
-                        convertToRawGitHubUrl(question["imageUrl"]),
-                        fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) => Image.asset(
-                          'assets/quiz.jpg',
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(5),
+                child: SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.30,
+                  width: double.infinity,
+                  child: question["imageUrl"] != null &&
+                          question["imageUrl"].toString().trim().isNotEmpty
+                      ? Image.network(
+                          convertToRawGitHubUrl(question["imageUrl"]),
                           fit: BoxFit.cover,
-                        ),
-                      )
-                    : Image.asset(
-                        'assets/quiz.jpg',
-                        fit: BoxFit.cover,
-                      ),
+                          errorBuilder: (context, error, stackTrace) =>
+                              Image.asset('assets/quiz.jpg', fit: BoxFit.cover),
+                        )
+                      : Image.asset('assets/quiz.jpg', fit: BoxFit.cover),
+                ),
               ),
-            ),
-            SizedBox(height: 20),
-            CustomPaint(size: Size(double.infinity, 5), painter: YellowLinePainter()),
-            CustomPaint(size: Size(double.infinity, 5), painter: NavyLinePainter()),
-            CustomPaint(size: Size(double.infinity, 5), painter: WhiteLinePainter()),
-            SizedBox(height: 20),
-            Container(
-              width: double.infinity,
-              padding: EdgeInsets.only(bottom: 20),
-              child: Text(
-                question["question"] ?? "",
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                textAlign: TextAlign.left,
-              ),
-            ),
-            Column(
-              children: (question["options"] as List<dynamic>).asMap().entries.map<Widget>((entry) {
-                int i = entry.key;
-                String option = entry.value;
-                String correctAnswer = question["answer"];
-                bool isCorrect = correctAnswer == option;
-                bool isSelected = selectedAnswer == option;
 
-                return GestureDetector(
-                  onTap: () {
-                    if (!isAnswered) {
-                      setState(() {
-                        selectedAnswer = option;
-                        isAnswered = true;
-                        if (isCorrect) score++;
-                      });
-                      Future.delayed(Duration(seconds: 1), nextQuestion);
-                    }
-                  },
-                  child: Container(
-                    margin: EdgeInsets.symmetric(vertical: 5),
-                    height: 44,
-                    width: double.infinity,
-                    child: Stack(
-                      children: [
-                        Container(
-                          decoration: BoxDecoration(
-                            color: isSelected
-                                ? (isCorrect ? Color(0xFF118AB2) : Color(0xFFFA8334))
-                                : Color(0xFF2B4162),
-                            borderRadius: BorderRadius.circular(5),
+              const SizedBox(height: 20),
+
+              CustomPaint(size: Size(double.infinity, 5), painter: YellowLinePainter()),
+              CustomPaint(size: Size(double.infinity, 5), painter: NavyLinePainter()),
+              CustomPaint(size: Size(double.infinity, 5), painter: WhiteLinePainter()),
+
+              const SizedBox(height: 20),
+
+              Text(
+                question["question"] ?? "",
+                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+
+              const SizedBox(height: 16),
+
+              Column(
+                children: (question["options"] as List<dynamic>)
+                    .asMap()
+                    .entries
+                    .map<Widget>((entry) {
+                  int i = entry.key;
+                  String option = entry.value;
+                  String correctAnswer = question["answer"];
+                  bool isCorrect = correctAnswer == option;
+                  bool isSelected = selectedAnswer == option;
+
+                  return GestureDetector(
+                    onTap: () {
+                      if (!isAnswered) {
+                        setState(() {
+                          selectedAnswer = option;
+                          isAnswered = true;
+                          if (isCorrect) score++;
+                        });
+                        Future.delayed(const Duration(seconds: 1), nextQuestion);
+                      }
+                    },
+                    child: Container(
+                      margin: const EdgeInsets.symmetric(vertical: 5),
+                      height: 44,
+                      width: double.infinity,
+                      child: Stack(
+                        children: [
+                          Container(
+                            decoration: BoxDecoration(
+                              color: isSelected
+                                  ? (isCorrect
+                                      ? const Color(0xFF118AB2)
+                                      : const Color(0xFFFA8334))
+                                  : const Color(0xFF2B4162),
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                            padding: const EdgeInsets.only(left: 88),
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              option,
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
                           ),
-                          child: Padding(
-                            padding: EdgeInsets.only(left: 88.0),
-                            child: Align(
-                              alignment: Alignment.centerLeft,
-                              child: Text(
-                                option,
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
+                          ClipPath(
+                            clipper: DiagonalClipper(),
+                            child: Container(
+                              width: 80,
+                              decoration: const BoxDecoration(
+                                color: Color(0xFFFFD116),
+                                borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(5),
+                                  bottomLeft: Radius.circular(5),
                                 ),
                               ),
-                            ),
-                          ),
-                        ),
-                        ClipPath(
-                          clipper: DiagonalClipper(),
-                          child: Container(
-                            width: 80,
-                            decoration: BoxDecoration(
-                              color: Color(0xFFFFD116),
-                              borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(5),
-                                bottomLeft: Radius.circular(5),
-                              ),
-                            ),
-                            child: Center(
+                              alignment: Alignment.center,
                               child: Text(
                                 getAnswerLabel(i),
-                                style: TextStyle(
+                                style: const TextStyle(
                                   color: Color(0xFF3E3E3E),
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
@@ -273,17 +271,19 @@ void restartQuiz() {
                               ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                );
-              }).toList(),
-            ),
-          ],
+                  );
+                }).toList(),
+              ),
+            ],
+          ),
         ),
       ),
     );
+
+
   }
 
   String getAnswerLabel(int index) {
